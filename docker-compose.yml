@@ -1,0 +1,39 @@
+networks:
+  default:
+
+services:
+  db:
+    image: mysql:latest
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: Dogdog1029
+      MYSQL_DATABASE: dogrestaurantdb
+      MYSQL_USER: dogadmin
+      MYSQL_PASSWORD: Dogdog1029
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password      
+    volumes:
+      - mysql_data:/var/lib/mysql
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - '3000:3000'
+  #   container_name: dogrestaurantapi
+  #   restart: always
+  #   #environment:
+  #     #- NODE_ENV=development
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - ./src:/app/src
+  #   networks:
+  #     - default
+
+volumes:
+  mysql_data:
+  
+
+  
