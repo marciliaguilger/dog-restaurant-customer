@@ -5,6 +5,7 @@ const connectWithRetry = async (dataSourceOptions, maxRetries = 5, retryDelay = 
   
   while (retries < maxRetries) {
     try {
+      console.log(__dirname + '/entities/*.ts')
       const dataSource = new DataSource(dataSourceOptions);
       await dataSource.initialize();
       console.log('Database connection established');
@@ -32,10 +33,10 @@ export const databaseProviders = [
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         entities: [
-          __dirname + '/**/entities/*.entity{.ts,.js}',
+          __dirname + '/entities/*.entity{.ts,.js}',
         ],
         migrations: [
-          __dirname + '/**/entities/*.entity{.ts,.js}',
+          __dirname + 'entities/*.entity{.ts,.js}',
         ],
         synchronize: false,
         logging: true,

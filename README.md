@@ -32,6 +32,18 @@
 $ npm install
 ```
 
+## Database
+- Create a migration
+
+```bash
+npm run typeorm migration:create src/infrastructure/migrations/customer
+```
+
+- Run the migration:
+
+```bash
+npm run typeorm migration:run -- --dataSource src/infrastructure/data-source.ts
+```
 ## Running the app
 
 ```bash
