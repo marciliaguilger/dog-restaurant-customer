@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dog-restaurant-customers
+  name: dog-restaurant-customer
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dog-restaurant-customers
+      app: dog-restaurant-customer
   template:
     metadata:
       labels:
-        app: dog-restaurant-customers
+        app: dog-restaurant-customer
     spec:
-      hostname: dog-restaurant-customers
+      hostname: dog-restaurant-customer
       serviceAccountName: dog-service-account
       containers:
-      - name: dog-restaurant-customers
+      - name: dog-restaurant-customer
         image: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/dog-restaurant-customer:latest
         resources:
           requests:

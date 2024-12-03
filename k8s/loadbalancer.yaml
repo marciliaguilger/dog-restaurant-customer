@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: dog-restaurant-customers-elb
+  name: dog-restaurant-customer-elb
   namespace: default
 spec:
   selector:
-    app: dog-restaurant-customers
+    app: dog-restaurant-customer
   ports:
     - protocol: TCP
       port: 80
