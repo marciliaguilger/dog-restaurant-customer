@@ -57,10 +57,10 @@ const convertClienteModelToDynamoItem = (cliente: Cliente): DynamoDB.DocumentCli
 
 const convertDynamoItemToModel = (dynamoItem: Record<string, DynamoDB.AttributeValue>): ClienteModel => {
     return {
-        nome: dynamoItem.Attributes['nome'],
-        id: dynamoItem.Attributes['id'],
-        documento: dynamoItem.Attributes['documento'],
-        email: dynamoItem.Attributes['email'],
+        nome: dynamoItem['nome']?.S || '',
+        id: dynamoItem['id']?.S || '',
+        documento: dynamoItem['documento']?.S || '',
+        email: dynamoItem['email']?.S || '',
     }
 };
 
