@@ -71,8 +71,6 @@ export class DynamoDbRepository implements IDynamoDbRepository{
     
       try {
         const result = await this.dynamoDb.send(command);
-        console.log('dynamo result')
-        console.log(result)
         return result.Items[0] || undefined;
       } catch (error) {
         console.error("Error querying DynamoDB:", error);
