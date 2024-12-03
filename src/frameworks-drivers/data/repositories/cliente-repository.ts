@@ -47,7 +47,7 @@ const convertClienteModelToDynamoItem = (cliente: Cliente): DynamoDB.DocumentCli
     return {
         id: cliente.id,
         nome: cliente.nome,
-        documento: cliente.cpf,
+        documento: cliente.cpf.numero,
         email: cliente.email
     };
 };
