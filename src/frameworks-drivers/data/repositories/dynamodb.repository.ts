@@ -7,7 +7,7 @@ import { DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand } from "@
 
 export class DynamoDbRepository implements IDynamoDbRepository{
   
-  private readonly tableName = "pagamentos";
+  private readonly tableName = "clientes";
   private readonly dynamoDb: DynamoDBDocumentClient;
 
   constructor() {
@@ -23,13 +23,12 @@ export class DynamoDbRepository implements IDynamoDbRepository{
   }  
   
     async testConnection() {
-        const params = {
-          TableName: "clientes",
-        };
-    
-        try {
-          const data = await this.dynamoDb.send(new ScanCommand(params));
-          console.log("Scan de itens:", data.Items);
+      const params = {
+        TableName: this.tableName,
+      };
+      try {
+        const data = await this.dynamoDb.send(new ScanCommand(params));
+        console.log("Scan de itens:", data.Items);
       } catch (error) {
         console.error('Erro ao conectar ao DynamoDB:', error);
       }
@@ -37,13 +36,15 @@ export class DynamoDbRepository implements IDynamoDbRepository{
 
     async create(item: PutItemInputAttributeMap): Promise<void> {
       console.log('create method called')
-      console.log(this.dynamoDb.config.credentials)
-
-      const command = new PutCommand({
-        TableName: this.tableName,
-        Item: item,
-      });
-      await this.dynamoDb.send(command);
+      try {
+        const command = new PutCommand({
+          TableName: this.tableName,
+          Item: item,
+        });
+        await this.dynamoDb.send(command);
+      } catch (error) {
+        console.error('Erro ao inserir dados:', error);
+      }
     }
  
     async read(documento: string): Promise<Item | null> {

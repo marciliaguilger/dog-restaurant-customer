@@ -38,6 +38,7 @@ export class ClienteRepository implements IClienteRepository  {
     
     create(customer: Cliente) {
         const item = convertClienteModelToDynamoItem(customer)
+        console.log(item)
         this.db.create(item)
     }
 }
@@ -63,10 +64,10 @@ const convertDynamoItemToModel = (dynamoItem: Record<string, DynamoDB.AttributeV
 const convertDynamoListItemToListModel = (items: Record<string, DynamoDB.AttributeValue>[]): ClienteModel[] => {
     
     const mappedResults: ClienteModel[] = items.map(item => ({
-      id: item.id.S ?? "",
-      nome: item.nome.S ?? "",
-      documento: item.documento.S ?? "",
-      email: item.email.S ?? ""
+      id: item.Attributes['id'],
+      nome: item.Attributes['nome'],
+      documento: item.Attributes['documento'],
+      email: item.Attributes['email']
     }));
 
     return mappedResults;
