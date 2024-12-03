@@ -25,6 +25,9 @@ export class ClienteRepository implements IClienteRepository  {
     
     async getByCpf(cpf: string): Promise<Cliente | undefined> {
         const item = await this.db.queryClienteByDocumento(cpf)
+        console.log(item)
+        
+        if (item === null || item === undefined) return undefined;
         const customerData = convertDynamoItemToModel(item)
         
         if (customerData === null) return undefined;
