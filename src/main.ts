@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ClienteModule } from './application/cliente.module';
+import { ClienteModule } from './frameworks-drivers/api/cliente.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 
