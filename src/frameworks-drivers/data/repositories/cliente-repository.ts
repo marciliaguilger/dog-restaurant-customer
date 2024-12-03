@@ -1,50 +1,73 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
-import { Clientes } from "../entities/customer.entity";
 import { IClienteRepository } from "src/domain/ports/cliente-repository.interface";
 import { Cliente } from "src/domain/entities/cliente.entity";
+import { IDynamoDbRepository } from "./dynamodb-repository.interface";
+import { ClienteModel } from "src/interface-adapters/gateways/db-model/cliente.model";
+import { DynamoDB } from "aws-sdk";
 
 @Injectable()
 export class ClienteRepository implements IClienteRepository  {
     constructor(
-        @Inject('CLIENTE_REPOSITORY')
-        private clienteRepo: Repository<Clientes>,
-      ) {}
+        @Inject(IDynamoDbRepository)
+        private readonly db: IDynamoDbRepository,
+    ){}
     
     async getAll(): Promise<Cliente[]> {
-        const clientes = await this.clienteRepo
-        .createQueryBuilder("Clientes")
-        .getMany()
-
-        const clientesList: Cliente[] = []
-
+        const items = await this.db.scan()
+        const clientes = convertDynamoListItemToListModel(items)
+        const response: Cliente[] = [];
+        
         clientes.forEach(c => {
-            clientesList.push(new Cliente(c.ClienteNome, c.ClienteDocumento, c.Email))
+            response.push(new Cliente(c.nome, c.documento, c.email))
         })
-
-        return clientesList
+        return response
     }
     
     async getByCpf(cpf: string): Promise<Cliente | undefined> {
-        const customers = await this.clienteRepo
-        .createQueryBuilder("Clientes")
-        .where("Clientes.ClienteDocumento = :document", { document: cpf })
-        .getOne()
+        const item = await this.db.queryClienteByDocumento(cpf)
+        const customerData = convertDynamoItemToModel(item)
         
-        if (customers === null) return undefined;
-        const customer = new Cliente(customers.ClienteNome, customers.ClienteDocumento, customers.Email);
+        if (customerData === null) return undefined;
+        const customer = new Cliente(
+            customerData.nome,
+            customerData.documento, 
+            customerData.email);
+
         return customer
     }
     
     create(customer: Cliente) {
-        const customerEntity = new Clientes()
-        customerEntity.ClienteId = customer.id;
-        customerEntity.ClienteNome = customer.nome;
-        customerEntity.ClienteDocumento = customer.cpf.numero;
-        customerEntity.TipoDocumento = "CPF";
-        customerEntity.Email = customer.email;
-
-        this.clienteRepo.create(customerEntity);
-        this.clienteRepo.save(customerEntity);
+        const item = convertClienteModelToDynamoItem(customer)
+        this.db.create(item)
     }
 }
+
+const convertClienteModelToDynamoItem = (cliente: Cliente): DynamoDB.DocumentClient.PutItemInputAttributeMap => {
+    return {
+        id: cliente.id,
+        nome: cliente.nome,
+        documento: cliente.cpf,
+        email: cliente.email
+    };
+};
+
+const convertDynamoItemToModel = (dynamoItem: Record<string, DynamoDB.AttributeValue>): ClienteModel => {
+    return {
+        nome: dynamoItem.Attributes['nome'],
+        id: dynamoItem.Attributes['id'],
+        documento: dynamoItem.Attributes['documento'],
+        email: dynamoItem.Attributes['email'],
+    }
+};
+
+const convertDynamoListItemToListModel = (items: Record<string, DynamoDB.AttributeValue>[]): ClienteModel[] => {
+    
+    const mappedResults: ClienteModel[] = items.map(item => ({
+      id: item.id.S ?? "",
+      nome: item.nome.S ?? "",
+      documento: item.documento.S ?? "",
+      email: item.email.S ?? ""
+    }));
+
+    return mappedResults;
+};
