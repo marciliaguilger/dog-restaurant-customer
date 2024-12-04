@@ -1,9 +1,9 @@
-import { Body, Controller, Get, HttpStatus, Inject, NotFoundException, Param, Post, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Inject, NotFoundException, Param, Post } from "@nestjs/common";
 import { CreateClienteInput as CreateClienteInput } from "../../interface-adapters/presenters/input/create-cliente-input";
 import { CustomerOutput as ClienteOutput } from "../../interface-adapters/presenters/output/cliente-output";
 import { ApiTags } from "@nestjs/swagger";
-import { IClienteUseCase } from "src/domain/use-cases/cliente-use-case.interface";
-import { Cliente } from "src/domain/entities/cliente.entity";
+import { IClienteUseCase } from "../../domain/use-cases/cliente-use-case.interface";
+import { Cliente } from "../../domain/entities/cliente.entity";
 
 @ApiTags('Cliente')
 @Controller('clientes')
