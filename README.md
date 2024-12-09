@@ -70,6 +70,10 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+Test coverage
+![image](https://github.com/user-attachments/assets/9e68fe1d-3ba8-4fd5-8713-012bae0fecf4)
+
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
